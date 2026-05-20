@@ -8,6 +8,12 @@ A **mock corporate knowledge base** demonstrating the [LLM-Wiki Pattern](https:/
 
 *Graph view of the mock vault. Every node is a wiki page; every line is a `[[link]]` between them. The LLM-Wiki Pattern is what produces a graph this dense — every cross-reference is maintained as the wiki grows, because the LLM doesn't forget.*
 
+…and here's what the same pattern looks like at meaningful scale — a single LLM-Wiki vault grown over months of regular ingests:
+
+![Same pattern, at scale: a vault grown over months. Hundreds of nodes; the cross-link density doesn't thin out as the corpus grows.](./screenshots/graph-view-2.png)
+
+*The visible structure stays whole because the LLM maintains every cross-reference on every ingest. Traditional wikis decay as they grow — links rot, cross-references go stale, page volume outpaces maintenance effort. The LLM-Wiki Pattern doesn't, because the bookkeeping is the LLM's job. **This is what "compounding" looks like.***
+
 ---
 
 ## What is this pattern?
