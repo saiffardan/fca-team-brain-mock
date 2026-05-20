@@ -1,8 +1,12 @@
 # FCA Team Brain — Mock Demo
 
-A **mock corporate knowledge base** demonstrating the [LLM-Wiki Pattern](https://www.lesswrong.com/posts/RGwgKfgmf6FfNCzZD/llm-wiki) in practice. This repo is *not* a real bank team brain — it's a fictional Financial-Crime-Analytics (FCA) team's wiki, generated as a demonstration artifact.
+A **mock corporate knowledge base** demonstrating the [LLM-Wiki Pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) in practice. This repo is *not* a real bank team brain — it's a fictional Financial-Crime-Analytics (FCA) team's wiki, generated as a demonstration artifact.
 
 **Built as prep for a corporate brainstorm session on whether to adopt this pattern internally.** All content is fictional.
+
+![Graph view of the mock vault in Obsidian — 16 pages, dense cross-linking. The interconnection is the point.](./screenshots/graph-view.png)
+
+*Graph view of the mock vault. Every node is a wiki page; every line is a `[[link]]` between them. The LLM-Wiki Pattern is what produces a graph this dense — every cross-reference is maintained as the wiki grows, because the LLM doesn't forget.*
 
 ---
 
@@ -55,7 +59,17 @@ fca-team-brain-mock/
 2. **Skim [`index.md`](./index.md)** — see the full content catalog. Notice how every page has a one-line summary; this is what the LLM reads first on every query.
 3. **Open a wiki page** — e.g. [`wiki/people/sam-rivers.md`](./wiki/people/sam-rivers.md). Notice the dense `[[wiki-links]]` to other pages. The graph is part of the value.
 4. **Check [`log.md`](./log.md)** — chronological record of ingests, queries worth keeping, and lints. Demonstrates how the brain accumulates.
-5. **Open this repo in Obsidian and view the graph** — the visual interconnection lands the differentiator faster than any explanation. (Screenshot in [`screenshots/`](./screenshots/).)
+5. **Open this repo in Obsidian and view the graph** — the visual interconnection lands the differentiator faster than any explanation.
+
+## What the pages look like
+
+Two sample pages — a person and a policy — in Obsidian preview:
+
+| `wiki/people/sam-rivers.md` | `wiki/policies/sanctions-screening-policy.md` |
+|---|---|
+| ![Sam Rivers — the team's procedure SME. Every reference to another entity is a live link.](./screenshots/sample-page-1.png) | ![Sanctions Screening Policy v2.3 — every linked procedure / training / project / owner is a live cross-reference.](./screenshots/sample-page-2.png) |
+
+Notice the **backlinks counter in the bottom-right** of each page — Obsidian surfaces every page that links *into* this one. At team scale, this is how you find "everything that touches sanctions screening" without grep.
 
 ## What the LLM does that humans don't
 
@@ -79,20 +93,31 @@ This wiki: the LLM touches every page that should know about the new artifact. *
 
 The brain reads `index.md`, traverses the relevant `[[links]]`, and returns a sourced answer — without re-deriving the synthesis from raw documents every time.
 
-## How to demo this live
+## What the LLM does with it
 
-Open this folder in Claude Code (or any agentic LLM with file-system tool use), then ask:
+Open this folder in Claude Code (or any agentic LLM with file-system tool use) and ask questions. The LLM reads the schema, consults `index.md`, follows the relevant `[[wiki-links]]`, and answers with **inline citations + a classification of the answer** — *explicit* (stated directly in the wiki), *inferred* (reasonable from adjacent content), or *unknown* (no signal — say so, don't guess).
 
-```
-> Who is Sam Rivers and what policies do they own?
+Three real interactions captured against this exact repo:
 
-> What's the current status of the sanctions-screening uplift project,
-  and which procedures does it touch?
+### Query 1 — "Who is Sam Rivers and what policies do they own?"
 
-> Read log.md and tell me what happened last week.
-```
+![The LLM answers with file-and-line citations: name, role, joined date, ownership map. Critically, it distinguishes 'Policies owned: none' from 'Policies he works against' — and classifies the whole answer as explicit.](./screenshots/llm-query-1.png)
 
-Screenshots of these exact interactions are in [`screenshots/`](./screenshots/).
+The interesting move is the **distinction Sam doesn't own any policies, but does work against both**. A RAG system retrieving fragments would likely conflate these. The LLM-Wiki Pattern doesn't, because the wiki itself drew the distinction at ingest time.
+
+### Query 2 — "What's the current status of the sanctions-screening uplift project, and which procedures does it touch?"
+
+![The LLM walks Q2 milestones (✓ done / ◐ in progress / ☐ scheduled), surfaces a recent scope change with the meeting that drove it, and pulls the one procedure the project touches — all with file:line citations and an 'explicit' classification.](./screenshots/llm-query-2.png)
+
+Notice how the answer reaches **across pages** — project page for status, meeting page for the scope change, procedure page for the cross-link. That's the synthesis property the wiki layer makes free.
+
+### Query 3 — "Read log.md and tell me what happened last week."
+
+![The LLM is honest about negative results: 'Nothing was logged last week' with the explicit date range. Then offers the nearest entries with line numbers. Doesn't fabricate.](./screenshots/llm-query-3.png)
+
+The **honest-negative-result** behavior is the discipline the schema enforces. The LLM doesn't fabricate activity to fill the answer — it tells you the window is empty and shows you the nearest real entries.
+
+---
 
 ## Required ingredients (what makes this work)
 
@@ -119,5 +144,5 @@ MIT — see [LICENSE](./LICENSE).
 
 ## Credits
 
-- The LLM-Wiki Pattern was articulated in 2026 by an anonymous practitioner. The pattern itself sits in the lineage of [Vannevar Bush's Memex](https://en.wikipedia.org/wiki/Memex) (1945) — a personal, curated, associatively-linked knowledge store. Bush couldn't solve who would maintain it. LLMs solve that.
+- The LLM-Wiki Pattern is articulated in [this 2026 gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f). The pattern itself sits in the lineage of [Vannevar Bush's Memex](https://en.wikipedia.org/wiki/Memex) (1945) — a personal, curated, associatively-linked knowledge store. Bush couldn't solve who would maintain it. LLMs solve that.
 - This mock vault is the product of one person's prep for a corporate brainstorm, built in a few focused hours using Claude Code.
