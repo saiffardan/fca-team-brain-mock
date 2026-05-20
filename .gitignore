@@ -1,0 +1,15 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Obsidian — keep workspace local
+.obsidian/workspace*
+.obsidian/cache*
+
+# Editor
+.vscode/
+.idea/
+
+# Local scratch
+scratch/
+*.local.md
